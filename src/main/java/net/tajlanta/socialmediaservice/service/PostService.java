@@ -1,5 +1,6 @@
 package net.tajlanta.socialmediaservice.service;
 
+import net.tajlanta.socialmediaservice.dto.PostDTO;
 import net.tajlanta.socialmediaservice.entity.Post;
 
 import java.util.List;
@@ -7,11 +8,11 @@ import java.util.List;
 public interface PostService {
     void create(Post post);
 
-    List<Post> readAll();
+    List<PostDTO> readAll();
 
-    Post read(Long id);
+    PostDTO read(Long id);
 
     boolean update(Post post, Long id);
 
-    boolean delete(Long id);
+    void delete(Long id);
 }

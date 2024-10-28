@@ -1,34 +1,42 @@
 package net.tajlanta.socialmediaservice.service;
 
+import net.tajlanta.socialmediaservice.dto.ClientDTO;
 import net.tajlanta.socialmediaservice.entity.Client;
+import net.tajlanta.socialmediaservice.mappers.ClientDTOMapper;
 import net.tajlanta.socialmediaservice.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
 @Service
 public class ClientServiceImpl implements ClientService {
 
-    private static final AtomicInteger CLIENT_ID_HOLDER = new AtomicInteger();
+
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private ClientDTOMapper clientDTOMapper;
 
     @Override
     public void create(Client client) {
-        final Long clientId = (long) CLIENT_ID_HOLDER.incrementAndGet();
-        client.setId(clientId);
         clientRepository.save(client);
     }
 
     @Override
-    public List<Client> readAll() {
-       return clientRepository.findAll();
+    public List<ClientDTO> readAll() {
+
+        return clientRepository.findAll()
+                .stream()
+                .map(clientDTOMapper)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Client read(Long id) {
-        return clientRepository.getOne(id);
+    public ClientDTO read(Long id) {
+        return clientDTOMapper.apply(
+                clientRepository.getReferenceById(id));
     }
 
     @Override
@@ -37,11 +45,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public void delete(Long id) {
         clientRepository.deleteById(id);
-        if (clientRepository.existsById(id)) {
-            return false;
-        }
-        return true;
     }
 }

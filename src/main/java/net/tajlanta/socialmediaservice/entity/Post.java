@@ -16,16 +16,31 @@ import java.util.List;
 @AllArgsConstructor
 public class Post {
 
+
     boolean commentsAllowed;
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @Size(max = 2000, message = "Xuli raspizdelsya")
+    @Size(max = 2000, message = "Not valid")
     private String content;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Comment> comments;
+
+    public boolean isCommentsAllowed() {
+        return this.commentsAllowed;
+    }
+
+    public Post(boolean commentsAllowed, Long id, String content) {
+        this.commentsAllowed = commentsAllowed;
+        this.id = id;
+        this.content = content;
+    }
+
+    public void setContent(@Size(max = 2000, message = "Not valid") String content) {
+        this.content = content;
+    }
 }
